@@ -79,6 +79,7 @@ export async function login(
     password: formData.get('password'),
   });
   const errorMessage = { message: 'Invalid login credentials.' };
+  // console.log('validatedFields', validatedFields);
 
   // If any form fields are invalid, return early
   if (!validatedFields.success) {
@@ -91,7 +92,7 @@ export async function login(
   const user = await db.query.users.findFirst({
     where: eq(users.email, validatedFields.data.email),
   });
-
+  // console.log('user', user);
   // If user is not found, return early
   if (!user) {
     return errorMessage;
@@ -101,7 +102,7 @@ export async function login(
     validatedFields.data.password,
     user.password,
   );
-
+  // console.log('passwordMatch', passwordMatch);
   // If the password does not match, return early
   if (!passwordMatch) {
     return errorMessage;

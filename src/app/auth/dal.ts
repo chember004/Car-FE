@@ -16,7 +16,7 @@ export const getUser = cache(async () => {
       // Explicitly return the columns you need rather than the whole user object
       columns: {
         id: true,
-        name: true,
+        username: true,
         email: true,
       },
     });

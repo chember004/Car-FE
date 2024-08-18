@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const fetchUser = async () => {
     try {
-      console.log('BASE_URL', process.env.BASE_URL);
+      // console.log('BASE_URL', process.env.BASE_URL);
       const { data } = await axios.get(`/api/auth/status`);
       dispatch({ type: 'SET_USER', payload: data });
     } catch (error) {
