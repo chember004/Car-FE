@@ -27,18 +27,22 @@ export async function decrypt(session: string | undefined = '') {
   }
 }
 
-export async function createSession(userId: string) {
-  const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+export async function createSession(userId: string, apiSession: any) {
+  const {
+    cookie: { originalMaxAge, expires, httpOnly, path },
+  } = apiSession;
+  const expiresAt = new Date(expires);
   const session = await encrypt({ userId, expiresAt });
 
   cookies().set('session', session, {
-    httpOnly: true,
     secure: true,
-    expires: expiresAt,
     sameSite: 'lax',
-    path: '/',
+    maxAge: originalMaxAge,
+    expires: expiresAt,
+    httpOnly,
+    path,
   });
-  // console.log('session', session);
+  console.log('session', session);
   redirect('/dashboard');
 }
 

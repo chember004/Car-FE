@@ -3,12 +3,12 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { login } from '@/app/auth/auth';
+import { loginAccount } from '@/app/auth/auth';
 import Link from 'next/link';
 import { useFormState, useFormStatus } from 'react-dom';
 
 export function LoginForm() {
-  const [state, action] = useFormState(login, undefined);
+  const [state, action] = useFormState(loginAccount, undefined);
 
   return (
     <form action={action}>
