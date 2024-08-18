@@ -38,7 +38,7 @@ export async function createSession(userId: string) {
     sameSite: 'lax',
     path: '/',
   });
-
+  // console.log('session', session);
   redirect('/dashboard');
 }
 
