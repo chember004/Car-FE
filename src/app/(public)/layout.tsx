@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { MenuIcon } from '@/components/ui/icons';
+import SignIn from '@/components/authentication/sign-in';
 
 const links = [
   { href: '#', title: 'Home' },
@@ -39,6 +40,7 @@ export default function Layout({
             >
               Login
             </Link>
+            <SignIn />
             <button className="inline-flex rounded-md md:hidden" type="button">
               <MenuIcon className="h-6 w-6" />
               <span className="sr-only">Toggle Menu</span>

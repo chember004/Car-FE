@@ -1,5 +1,5 @@
 import axios from 'axios';
-// import "@/drizzle/envConfig";
+// import '@/drizzle/envConfig';
 
 const axiosInstance = axios.create({
   baseURL: process.env.BASE_URL,

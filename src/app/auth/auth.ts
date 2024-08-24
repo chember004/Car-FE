@@ -1,6 +1,6 @@
 'use server';
 
-import '@/drizzle/envConfig';
+// import '@/drizzle/envConfig';
 import { db } from '@/drizzle/db';
 import { users } from '@/drizzle/schema';
 import {
@@ -9,9 +9,12 @@ import {
   SignupFormSchema,
 } from '@/app/auth/definitions';
 import { createSession, deleteSession } from '@/app/auth/stateless-session';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
 import axios from 'axios';
+import { CredentialsSignin } from 'next-auth';
+import { signIn, signOut } from '@/auth';
+import { redirect } from 'next/navigation';
 
 export async function signup(
   state: FormState,
@@ -67,11 +70,13 @@ export async function signup(
   }
 
   // 4. Create a session for the user
-  const userId = user.id.toString();
+  // const userId = user.id.toString();
   // const cookie = await getCookie();
-  await createSession(userId);
-}
+  // await createSession(userId);
 
+  //for next-auth
+  redirect('/login');
+}
 export async function login(
   state: FormState,
   formData: FormData,
@@ -95,7 +100,7 @@ export async function login(
   const user = await db.query.users.findFirst({
     where: eq(users.email, validatedFields.data.email),
   });
-  console.log('user found in login? ', user);
+  console.log('user found in login func? ', user);
   // If user is not found, return early
   if (!user) {
     return errorMessage;
@@ -116,18 +121,59 @@ export async function login(
   await createSession(userId);
 }
 export async function logout() {
-  const { data }: any = await axios.get(
-    `${process.env.BASE_URL}/api/auth/logout`,
-  );
-  if (!data) {
-    return {
-      message: 'An error occurred while logging out your account.',
-    };
-  }
-
+  // const { data }: any = await axios.get(
+  //   `${process.env.BASE_URL}/api/auth/logout`,
+  // );
+  // if (!data) {
+  //   return {
+  //     message: 'An error occurred while logging out your account.',
+  //   };
+  // }
   deleteSession();
+  redirect('/');
 }
 
+//next-auth login
+export const nextAuthLogin = async (
+  state: FormState,
+  formData: FormData,
+): Promise<FormState> => {
+  // 1. Validate form fields
+  const validatedFields = LoginFormSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+  });
+  const errorMessage = { message: 'Invalid login credentials.' };
+  // console.log('validatedFields', validatedFields);
+
+  // If any form fields are invalid, return early
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+  try {
+    const { email, password } = validatedFields.data;
+    await signIn('credentials', {
+      redirect: false,
+      redirectTo: '/home',
+      callbackUrl: '/',
+      email,
+      password,
+    });
+  } catch (error) {
+    const someError = error as CredentialsSignin;
+    console.log('someError', someError);
+    return someError;
+  }
+
+  redirect('/home');
+};
+//next-auth logout
+export const nextAuthLogout = async () => {
+  await signOut();
+  redirect('/');
+};
 export const loginAccount = async (
   state: FormState,
   formData: FormData,

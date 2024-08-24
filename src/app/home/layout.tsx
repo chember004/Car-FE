@@ -20,8 +20,8 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getUser();
-  console.log('Am I sign-in? ', user);
+  // const user = await getUser();
+  // console.log('Am I sign-in? ', user);
 
   const activeLink = '/home';
 

@@ -3,13 +3,13 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { loginAccount, login } from '@/app/auth/auth';
+import { loginAccount, login, nextAuthLogin } from '@/app/auth/auth';
 import Link from 'next/link';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useActionState } from 'react';
 
 export function LoginForm() {
-  const [state, action, isPending] = useFormState(login, undefined);
+  const [state, action, isPending] = useFormState(nextAuthLogin, undefined);
 
   return (
     <form action={action}>
