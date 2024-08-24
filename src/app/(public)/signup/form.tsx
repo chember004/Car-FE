@@ -5,9 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { signup } from '@/app/auth/auth';
 import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 
 export function SignupForm() {
-  const [state, action] = useFormState(signup, undefined);
+  const [state, action, isPending] = useActionState(signup, undefined);
 
   return (
     <form action={action}>
@@ -40,7 +41,10 @@ export function SignupForm() {
             </ul>
           </div>
         )}
-        <SignupButton />
+        {/* <SignupButton /> */}
+        <Button aria-disabled={isPending} type="submit" className="mt-2 w-full">
+          {isPending ? 'Submitting...' : 'Login'}
+        </Button>
       </div>
     </form>
   );
