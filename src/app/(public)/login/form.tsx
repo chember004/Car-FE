@@ -9,7 +9,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { useActionState } from 'react';
 
 export function LoginForm() {
-  const [state, action, isPending] = useActionState(loginAccount, undefined);
+  const [state, action, isPending] = useFormState(loginAccount, undefined);
 
   return (
     <form action={action}>
