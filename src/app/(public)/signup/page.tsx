@@ -1,6 +1,13 @@
 import Link from 'next/link';
 import { SignupForm } from '@/app/(public)/signup/form';
-export default function Page() {
+import { getSession } from '@/app/utils/getSession';
+import { redirect } from 'next/navigation';
+
+export default async function Page() {
+  const session = await getSession();
+  console.log('/signup ', session);
+  const user = session?.user;
+  if (user) redirect('/home');
   return (
     <div className="flex flex-col p-4 lg:w-1/3">
       <div className="text-center">

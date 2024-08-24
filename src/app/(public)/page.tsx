@@ -1,11 +1,14 @@
 import { auth } from '@/auth';
 import Link from 'next/link';
 import { getUser } from '../auth/dal';
+import { getSession } from '../utils/getSession';
+import { redirect } from 'next/navigation';
 
 export default async function Page() {
-  const session = await auth();
-  const user = await getUser();
-  console.log('SESSION ', session);
+  const session = await getSession();
+  console.log('/ public ', session);
+  const user = session?.user;
+  if (user) redirect('/home');
   return (
     <div className="container grid items-center gap-4 px-4 text-center md:px-6 lg:gap-10">
       <div className="space-y-3">

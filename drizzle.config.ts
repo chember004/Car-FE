@@ -1,7 +1,6 @@
-import '@/drizzle/envConfig';
+// import '@/drizzle/envConfig';
 import { defineConfig } from 'drizzle-kit';
-import { config } from 'dotenv';
-config({ path: '.env.local' });
+
 export default defineConfig({
   schema: './src/drizzle/schema.ts',
   out: './migrations',

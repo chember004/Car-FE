@@ -1,3 +1,4 @@
+import { auth } from '@/auth';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -7,8 +8,15 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import Image from 'next/image';
+import { redirect } from 'next/navigation';
+import { getUser } from '../auth/dal';
+import { getSession } from '../utils/getSession';
 
-export default function Page() {
+export default async function Page() {
+  const session = await getSession();
+  console.log('/home ', session);
+  const user = session?.user;
+  if (!user) return redirect('/login');
   const orders = [
     {
       id: 1,
