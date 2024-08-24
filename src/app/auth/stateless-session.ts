@@ -27,29 +27,28 @@ export async function decrypt(session: string | undefined = '') {
   }
 }
 
-export async function createSession(userId: string, apiSession: any) {
-  const {
-    cookie: { originalMaxAge, expires, httpOnly, path },
-  } = apiSession;
-  const expiresAt = new Date(expires);
+export async function createSession(userId: string, apiSession?: any) {
+  // const {
+  //   cookie: { originalMaxAge, expires, httpOnly, path },
+  // } = apiSession;
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   const session = await encrypt({ userId, expiresAt });
 
   cookies().set('session', session, {
+    httpOnly: true,
     secure: true,
-    sameSite: 'lax',
-    maxAge: originalMaxAge,
     expires: expiresAt,
-    httpOnly,
-    path,
+    sameSite: 'lax',
+    path: '/',
   });
-  console.log('session', session);
-  redirect('/dashboard');
+  console.log('createSession ', session);
+  redirect('/home');
 }
 
 export async function verifySession() {
   const cookie = cookies().get('session')?.value;
   const session = await decrypt(cookie);
-
+  console.log('verifySession ', session);
   if (!session?.userId) {
     redirect('/login');
   }

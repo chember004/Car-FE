@@ -3,13 +3,13 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { loginAccount } from '@/app/auth/auth';
+import { loginAccount, login } from '@/app/auth/auth';
 import Link from 'next/link';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useActionState } from 'react';
 
 export function LoginForm() {
-  const [state, action, isPending] = useActionState(loginAccount, undefined);
+  const [state, action, isPending] = useFormState(login, undefined);
 
   return (
     <form action={action}>
@@ -41,10 +41,10 @@ export function LoginForm() {
         {state?.message && (
           <p className="text-sm text-red-500">{state.message}</p>
         )}
-        {/* <LoginButton /> */}
-        <Button aria-disabled={isPending} type="submit" className="mt-2 w-full">
+        <LoginButton />
+        {/* <Button aria-disabled={isPending} type="submit" className="mt-2 w-full">
           {isPending ? 'Submitting...' : 'Login'}
-        </Button>
+        </Button> */}
       </div>
     </form>
   );

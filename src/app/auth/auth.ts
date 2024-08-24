@@ -68,8 +68,8 @@ export async function signup(
 
   // 4. Create a session for the user
   const userId = user.id.toString();
-  const cookie = await getCookie();
-  await createSession(userId, cookie);
+  // const cookie = await getCookie();
+  await createSession(userId);
 }
 
 export async function login(
@@ -95,7 +95,7 @@ export async function login(
   const user = await db.query.users.findFirst({
     where: eq(users.email, validatedFields.data.email),
   });
-  // console.log('user', user);
+  console.log('user found in login? ', user);
   // If user is not found, return early
   if (!user) {
     return errorMessage;
@@ -105,7 +105,7 @@ export async function login(
     validatedFields.data.password,
     user.password,
   );
-  // console.log('passwordMatch', passwordMatch);
+  console.log('passwordMatch in login? ', passwordMatch);
   // If the password does not match, return early
   if (!passwordMatch) {
     return errorMessage;
@@ -113,8 +113,7 @@ export async function login(
 
   // 4. If login successful, create a session for the user and redirect
   const userId = user.id.toString();
-  const cookie = await getCookie();
-  await createSession(userId, cookie);
+  await createSession(userId);
 }
 export async function logout() {
   const { data }: any = await axios.get(
