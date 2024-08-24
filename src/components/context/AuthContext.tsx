@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         password,
       });
       dispatch({ type: 'SET_USER', payload: response.data.user });
-      router.push('/dashboard');
+      router.push('/home');
     } catch (error) {
       dispatch({ type: 'SET_ERROR', payload: true });
     } finally {

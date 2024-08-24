@@ -8,7 +8,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { useActionState } from 'react';
 
 export function SignupForm() {
-  const [state, action, isPending] = useActionState(signup, undefined);
+  const [state, action, isPending] = useFormState(signup, undefined);
 
   return (
     <form action={action}>
@@ -41,10 +41,10 @@ export function SignupForm() {
             </ul>
           </div>
         )}
-        {/* <SignupButton /> */}
-        <Button aria-disabled={isPending} type="submit" className="mt-2 w-full">
+        <SignupButton />
+        {/* <Button aria-disabled={isPending} type="submit" className="mt-2 w-full">
           {isPending ? 'Submitting...' : 'Login'}
-        </Button>
+        </Button> */}
       </div>
     </form>
   );

@@ -8,7 +8,7 @@ import { verifySession } from '@/app/auth/stateless-session';
 export const getUser = cache(async () => {
   const session = await verifySession();
   if (!session) return null;
-
+  console.log('getUser func session', session);
   try {
     const data = await db.query.users.findMany({
       where: eq(users.id, session.userId),
@@ -20,7 +20,7 @@ export const getUser = cache(async () => {
         email: true,
       },
     });
-
+    console.log('getUser func data ', data);
     const user = data[0];
 
     return user;

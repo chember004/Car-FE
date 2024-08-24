@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { getUser } from '@/app/auth/dal';
 
 const navLinks = [
-  { title: 'Home', href: '/dashboard', badge: 0 },
+  { title: 'Home', href: '/home', badge: 0 },
   { title: 'Orders', href: '#', badge: 3 },
   { title: 'Products', href: '#', badge: 0 },
   { title: 'Customers', href: '#', badge: 0 },
@@ -21,8 +21,9 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const user = await getUser();
+  console.log('Am I sign-in? ', user);
 
-  const activeLink = '/dashboard';
+  const activeLink = '/home';
 
   return (
     <div className="flex min-h-screen w-full">
