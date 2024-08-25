@@ -20,6 +20,9 @@ declare module 'next-auth' {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  session: {
+    strategy: 'jwt',
+  },
   providers: [
     Credentials({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
@@ -31,33 +34,37 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       authorize: async (credentials) => {
         if (credentials === null) return null;
+        try {
+          const { email, password } =
+            await signInSchema.parseAsync(credentials);
+          const user = await db.query.users.findFirst({
+            where: eq(users.email, email),
+            columns: {
+              id: true,
+              password: true,
+              email: true,
+            },
+          });
+          // If user is not found, return early
+          if (!user) {
+            throw new Error('Invalid email or password');
+          }
+          // 3. Compare the user's password with the hashed password in the database
+          const passwordMatch = await compare(password, user.password);
+          console.log('passwordMatch in login nextAuth? ', passwordMatch);
+          // If the password does not match, return early
+          if (!passwordMatch) {
+            throw new Error('Invalid email or password');
+          }
 
-        const { email, password } = await signInSchema.parseAsync(credentials);
-        const user = await db.query.users.findFirst({
-          where: eq(users.email, email),
-          columns: {
-            id: true,
-            password: true,
-            email: true,
-          },
-        });
-        // If user is not found, return early
-        if (!user) {
-          throw new Error('Invalid email or password');
+          console.log('user found in login nextAuth? ', user);
+          const filteredUser = userDTO({ ...user, id: user?.id.toString() });
+
+          // return user object with their profile data
+          return filteredUser;
+        } catch (error) {
+          throw new Error('USer not found');
         }
-        // 3. Compare the user's password with the hashed password in the database
-        const passwordMatch = await compare(password, user.password);
-        console.log('passwordMatch in login nextAuth? ', passwordMatch);
-        // If the password does not match, return early
-        if (!passwordMatch) {
-          throw new Error('Invalid email or password');
-        }
-
-        console.log('user found in login nextAuth? ', user);
-        const filteredUser = userDTO({ ...user, id: user?.id.toString() });
-
-        // return user object with their profile data
-        return filteredUser;
       },
     }),
     Google({
@@ -80,13 +87,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         // User is available during sign-in
         token.id = user.id;
+        // token.role = user.role;
       }
       return token;
     },
-    // session({ session, token }) {
-    //   // session.user.id = user.id //if using db session strategy
-    //   session.user.id = token.id;
-    //   return session;
-    // },
+    session({ session, token }) {
+      // session.user.id = user.id //if using db session strategy
+      if (session?.user) {
+        session.user.id = token.id as string;
+        // token.role = user.role;
+      }
+      return session;
+    },
   },
 });

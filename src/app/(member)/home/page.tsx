@@ -9,8 +9,8 @@ import {
 } from '@/components/ui/card';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
-import { getUser } from '../auth/dal';
-import { getSession } from '../utils/getSession';
+import { getUser } from '../../auth/dal';
+import { getSession } from '../../utils/getSession';
 
 export default async function Page() {
   const session = await getSession();
