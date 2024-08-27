@@ -1,0 +1,49 @@
+object-list:
+  - app: user-authentication
+    port: 9000
+    list:
+      - 1.9
+      - 2.0
+      - 2.1
+    deployed: true
+  - app: shopping-cart
+    port: 9000
+    version-in-array: [1.9, 2.0, 2.1]
+    deployed: true
+
+list-only:
+  - user-authentication
+  - shopping-cart
+
+multilineString: |
+  this is a multiline multilineString
+  and this is the next line
+  next line
+
+singlelineString: >
+  this is a singleine singlelineString
+  and this is the next line
+  next line
+
+env-variables:
+  - sample $test $env
+
+placeholders:
+  spec:
+    selector:
+      app: { { .Values.service.app } } #placeholder
+
+--- #multiple components syntax
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+---
+apiVersion: v2
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app: nginx
